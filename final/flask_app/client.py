@@ -1,107 +1,109 @@
 import requests
 
+import requests
 
-class Movie(object):
-    def __init__(self, omdb_json, detailed=False):
-        if detailed:
-            self.genres = omdb_json["Genre"]
-            self.director = omdb_json["Director"]
-            self.actors = omdb_json["Actors"]
-            self.plot = omdb_json["Plot"]
-            self.awards = omdb_json["Awards"]
-
-        self.title = omdb_json["Title"]
-        self.year = omdb_json["Year"]
-        self.imdb_id = omdb_json["imdbID"]
-        self.type = "Movie"
-        self.poster_url = omdb_json["Poster"]
-
-    def __repr__(self):
-        return self.title
-
-
-class MovieClient(object):
-    def __init__(self, api_key):
+class PokeClient(object):
+    def __init__(self):
         self.sess = requests.Session()
-        self.base_url = f"http://www.omdbapi.com/?apikey={api_key}&r=json&type=movie&"
+        self.sess.headers.update({'User Agent': 'CMSC388J Spring 2021 Project 2'})
+        self.base_url = 'https://pokeapi.co/api/v2'
 
-    def search(self, search_string):
+    def get_pokemon_list(self):
         """
-        Searches the API for the supplied search_string, and returns
-        a list of Media objects if the search was successful, or the error response
-        if the search failed.
-
-        Only use this method if the user is using the search bar on the website.
+        Returns a list of pokemon names
         """
-        search_string = "+".join(search_string.split())
-        page = 1
+        pokemon = []
+        resp = self.sess.get(f'{self.base_url}/pokemon?limit=1200')
+        for poke_dict in resp.json()['results']:
+            pokemon.append(poke_dict['name'])
+        return pokemon
+    
+    def get_pokemon_info(self, pokemon):
+        """
+        Arguments:
 
-        search_url = f"s={search_string}&page={page}"
+        pokemon -- a lowercase string identifying the pokemon
 
-        resp = self.sess.get(self.base_url + search_url)
+        Returns a dict with info about the Pokemon with the 
+        following keys and the type of value they map to:
+        
+        name      -> string
+        height    -> int
+        weight    -> int
+        base_exp  -> int
+        moves     -> list of strings
+        abilities -> list of strings
+        """
 
-        if resp.status_code != 200:
-            raise ValueError(
-                "Search request failed; make sure your API key is correct and authorized"
-            )
+        req = f'pokemon/{pokemon}'
+        resp = self.sess.get(f'{self.base_url}/{req}')
 
-        data = resp.json()
+        code = resp.status_code
+        if code != 200:
+            raise ValueError(f'Request failed with status code: {code} and message: '
+                             f'{resp.text}')
+        
+        resp = resp.json()
+        
+        result = {}
 
-        if data["Response"] == "False":
-            raise ValueError(f'[ERROR]: Error retrieving results: \'{data["Error"]}\' ')
+        result['name'] = resp['name']
+        result['height'] = resp['height']
+        result['weight'] = resp['weight']
+        result['base_exp'] = resp['base_experience']
 
-        search_results_json = data["Search"]
-        remaining_results = int(data["totalResults"])
+        moves = []
+        for move_dict in resp['moves']:
+            moves.append(move_dict['move']['name'])
+        
+        result['moves'] = moves
 
-        result = []
-
-        ## We may have more results than are first displayed
-        while remaining_results != 0:
-            for item_json in search_results_json:
-                result.append(Movie(item_json))
-                remaining_results -= len(search_results_json)
-            page += 1
-            search_url = f"s={search_string}&page={page}"
-            resp = self.sess.get(self.base_url + search_url)
-            if resp.status_code != 200 or resp.json()["Response"] == "False":
-                break
-            search_results_json = resp.json()["Search"]
+        abilities = []
+        for ability_dict in resp['abilities']:
+            abilities.append(ability_dict['ability']['name'])
+        
+        result['abilities'] = abilities
 
         return result
 
-    def retrieve_movie_by_id(self, imdb_id):
+    def get_pokemon_with_ability(self, ability):
         """
-        Use to obtain a Movie object representing the movie identified by
-        the supplied imdb_id
+        Arguments:
+
+        ability -- a lowercase string identifying an ability
+
+        Returns a list of strings identifying pokemon that have the specified ability
         """
-        movie_url = self.base_url + f"i={imdb_id}&plot=full"
+        req = f'ability/{ability}'
+        resp = self.sess.get(f'{self.base_url}/{req}')
 
-        resp = self.sess.get(movie_url)
+        code = resp.status_code
+        if code != 200:
+            raise ValueError(f'Request failed with status code: {code} and message: '
+                             f'{resp.text}')
 
-        if resp.status_code != 200:
-            raise ValueError(
-                "Search request failed; make sure your API key is correct and authorized"
-            )
-
-        data = resp.json()
-
-        if data["Response"] == "False":
-            raise ValueError(f'Error retrieving results: \'{data["Error"]}\' ')
-
-        movie = Movie(data, detailed=True)
-
-        return movie
-
+        pokemon = []
+        for poke_dict in resp.json()['pokemon']:
+            pokemon.append(poke_dict['pokemon']['name'])
+        
+        return pokemon
 
 ## -- Example usage -- ###
-if __name__ == "__main__":
-    import os
+if __name__=='__main__':
+    client = PokeClient()
+    l = client.get_pokemon_list()
+    print(len(l))
+    print(l[1])
 
-    client = MovieClient(os.environ.get("OMDB_API_KEY"))
+    i = client.get_pokemon_info(l[1])
+    print(i.keys())
+    print(i['name'])
+    print(i['base_exp'])
+    print(i['weight'])
+    print(i['height'])
+    print(i['abilities'])
+    print(len(i['moves']))
 
-    movies = client.search("guardians")
 
-    for movie in movies:
-        print(movie)
-
-    print(len(movies))
+    p = client.get_pokemon_with_ability('tinted-lens')
+    print(p)

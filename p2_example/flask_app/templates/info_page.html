@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{# 
+    We should be able to navigate to `/pokemon/<pokemon_name>` and see info about the Pokemon
+    identified by `pokemon_name`. The info includes the name, weight, and other data. 
+    
+    The `get_pokemon_info()` method of the `PokeClient` class returns a dictionary with all of 
+    the info that you need. The dictionary of info will have a list of names of abilities.
+    Each of these abilities must be presented as a clickable link to another page,
+    located at `/ability/<ability_name>`.
+
+    There should be a clearly visible link to go back to the front-page of the website, located
+    at `/`.
+#}
+
+{% block content %}
+<a href="{{ url_for('index') }}"><b> Back To Index </b></a>
+
+<h3>Poke-Info</h3>
+
+<h3>{{info['name']}}</h3>
+
+<h3> Base Experience </h3>
+<b>{{info['base_exp']}}</b>
+
+<h3> Weight </h3>
+<b>{{info['weight']}}</b>
+
+<h3> Height </h3>
+<b>{{info['height']}}</b>
+
+<h3> Abilities </h3>
+<ol>
+    {% for a in info['abilities'] %}
+        <li><a href="{{ url_for('pokemon_with_ability', ability_name = a) }}"><b>{{ a }}</b></a></li>
+    {% endfor %}
+</ol>
+
+<h3> Moves </h3>
+<ol>
+    {% for m in info['moves'] %}
+        <li><b>{{ m }}</b></li>
+    {% endfor %}
+</ol>
+
+{% endblock %}

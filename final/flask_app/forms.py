@@ -24,7 +24,14 @@ class SearchForm(FlaskForm):
     submit = SubmitField("Search")
 
 
-class MovieReviewForm(FlaskForm):
+class PokemonReviewForm(FlaskForm):
+    text = TextAreaField(
+        "Comment", validators=[InputRequired(), Length(min=5, max=500)]
+    )
+    submit = SubmitField("Enter Comment")
+
+
+class TeamReviewForm(FlaskForm):
     text = TextAreaField(
         "Comment", validators=[InputRequired(), Length(min=5, max=500)]
     )
