@@ -37,23 +37,23 @@ def pokemon_detail(pokemon):
         flash(str(e))
         return redirect(url_for("users.login"))
 
-    form = PokemonReviewForm()
-    if form.validate_on_submit() and current_user.is_authenticated:
-        review = Review(
-            commenter=current_user._get_current_object(),
-            content=form.text.data,
-            date=current_time(),
-            pokemon=pokemon,
-        )
-        review.save()
+    if False:
+        form = PokemonReviewForm()
+        if form.validate_on_submit() and current_user.is_authenticated:
+            review = Review(
+                commenter=current_user._get_current_object(),
+                content=form.text.data,
+                date=current_time(),
+                pokemon=pokemon,
+            )
+            review.save()
 
-        return redirect(request.path)
+            return redirect(request.path)
 
-    reviews = Review.objects(pokemon=pokemon)
+        reviews = Review.objects(pokemon=pokemon)
 
     return render_template(
-        "pokemon_detail.html", form=form, pokemon=result, reviews=reviews
-    )
+        "pokemon_detail.html", pokemon=result)#, reviews=review
 
 
 @pokemon.route("/user/<username>")

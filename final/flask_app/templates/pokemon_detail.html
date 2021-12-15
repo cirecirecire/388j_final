@@ -23,9 +23,6 @@
           <li class="list-group-item"><b>Moves:</b> {% for m in pokemon['moves'] %}
               <li><b>{{ m }}</b></li>
             {% endfor %}</li>
-          <li class="list-group-item"><b>Abilities:</b> {% for a in pokemon['abilities'] %}
-              <li><a href="{{ url_for('pokemon_with_ability', ability_name = a) }}"><b>{{ a }}</b></a></li>
-          {% endfor %}</li>
         </ul>
       </div>
     </div>
