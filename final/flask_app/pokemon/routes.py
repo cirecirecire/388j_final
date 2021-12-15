@@ -13,7 +13,7 @@ def index():
     form = SearchForm()
 
     if form.validate_on_submit():
-        return redirect(url_for("pokemon.query_results", query=form.search_query.data))
+        return redirect(url_for("pokemon.pokemon_detail", pokemon=form.search_query.data))
 
     return render_template("index.html", form=form)
 
@@ -22,16 +22,15 @@ def index():
 def query_results(query):
     try:
         results = poke_client.get_pokemon_info(query)
-        results.append(poke_client.get_pokemon_with_ability(query))
     except ValueError as e:
         flash(str(e))
         return redirect(url_for("pokemon.index"))
 
-    return render_template("query.html", results=results)
+    return render_template("pokemon_detail.html", results=results)
 
 
 @pokemon.route("/pokemon/<pokemon>", methods=["GET", "POST"])
-def movie_detail(pokemon):
+def pokemon_detail(pokemon):
     try:
         result = poke_client.get_pokemon_info(pokemon)
     except ValueError as e:
@@ -53,7 +52,7 @@ def movie_detail(pokemon):
     reviews = Review.objects(pokemon=pokemon)
 
     return render_template(
-        "movie_detail.html", form=form, pokemon=result, reviews=reviews
+        "pokemon_detail.html", form=form, pokemon=result, reviews=reviews
     )
 
 

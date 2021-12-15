@@ -1,8 +1,5 @@
 {% extends "header.html" %}
 {% block content %}
-{% if error_msg %}
-    <p>{{ error_msg }}</p>
-{% endif %}
 
 <div class="container-fluid">
     {% for result in results %}
@@ -10,10 +7,15 @@
         <img src="{{ pokemon.image_url }}" 
         class="mr-3 movie" alt="missing">
         <div class="media-body">
-        <h5 class="mt-0"><a href="{{ url_for('pokemon.pokemon_detail', pokemon=result.name) }}">{{ result.name }}</a> ({{ result.base_exp }})</h5>
+        <h5 class="mt-0"><a href="{{ url_for('pokemon.pokemon_detail', pokemon=result) }}">{{ result }}</a> </h5>
         </div>
     </div>
     {% endfor %}
 </div>
+
+
+{% if error_msg %}
+    <p>{{ error_msg }}</p>
+{% endif %}
 
 {% endblock %}

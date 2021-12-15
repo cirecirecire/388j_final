@@ -12,16 +12,20 @@
   <div class="col">
     <div class="card text-center">
       <div class="card-header">
-        {{ pokemon.name }}
+        {{ pokemon['name'] }}
       </div>
       <div class="card-body">
         <img src="{{ pokemon.image_url }}" class="mr-3 movie" alt="alt text">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><b>Height:</b> {{ Pokemon.height }}</li>
-          <li class="list-group-item"><b>Weight:</b> {{ Pokemon.weight }}</li>
-          <li class="list-group-item"><b>Base Experience:</b> {{ Pokemon.base_exp }}</li>
-          <li class="list-group-item"><b>Moves:</b> {{ Pokemon.moves }}</li>
-          <li class="list-group-item"><b>Abilities:</b> {{ Pokemon.abilites }}</li>
+          <li class="list-group-item"><b>Height:</b> {{ pokemon['height'] }}</li>
+          <li class="list-group-item"><b>Weight:</b> {{ pokemon['weight'] }}</li>
+          <li class="list-group-item"><b>Base Experience:</b> {{ pokemon['base_exp'] }}</li>
+          <li class="list-group-item"><b>Moves:</b> {% for m in pokemon['moves'] %}
+              <li><b>{{ m }}</b></li>
+            {% endfor %}</li>
+          <li class="list-group-item"><b>Abilities:</b> {% for a in pokemon['abilities'] %}
+              <li><a href="{{ url_for('pokemon_with_ability', ability_name = a) }}"><b>{{ a }}</b></a></li>
+          {% endfor %}</li>
         </ul>
       </div>
     </div>
