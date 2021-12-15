@@ -1,6 +1,7 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms import BooleanField
 from werkzeug.utils import secure_filename
 from wtforms import StringField, IntegerField, SubmitField, TextAreaField, PasswordField
 from wtforms.validators import (
@@ -26,7 +27,7 @@ class SearchForm(FlaskForm):
 
 class PokemonReviewForm(FlaskForm):
     text = TextAreaField(
-        "Comment", validators=[InputRequired(), Length(min=5, max=500)]
+        "Comment", validators=[Length(min=0, max=500)]
     )
     submit = SubmitField("Enter Comment")
 
@@ -82,3 +83,10 @@ class UpdateUsernameForm(FlaskForm):
 class UpdateProfilePicForm(FlaskForm):
     pfp = FileField('Profile Picture', validators =[FileRequired(), FileAllowed(['jpg','png'], '.jpg or .png only')])
     submit = SubmitField('Update Profile Picture')
+
+
+class AddPokemonForm(FlaskForm):
+    submit = SubmitField("Add Pokemon to Team")
+
+class RemovePokemonForm(FlaskForm):
+    submit = SubmitField("Remove Pokemon to Team")

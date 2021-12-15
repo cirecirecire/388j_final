@@ -10,6 +10,26 @@
 </div>
 <div class="row">
     <div class="col">
+        {% if team %}
+            <h1> Your FABULOUS team! <small class="float-right">{{ team.count() }} team members</small></h1>
+            <ul class="media-list">
+                {% for pokemon in team %}
+                <li class="media review-item">
+                    <div class="media-body">
+                        <span class="float-right">
+                            <small>{{ pokemon['name'] }}</small>
+                        </span>
+                        <strong>For: <a href="{{ url_for('pokemon.pokemon_detail', pokemon=pokemon['name']) }}">
+                            </a>
+                        </strong>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h1> Your team is empty :( </h1>
+        {% endif %}
+
         <h1> Reviews <small class="float-right">{{ reviews.count() }} reviews</small></h1>
         <ul class="media-list">
             {% for review in reviews %}

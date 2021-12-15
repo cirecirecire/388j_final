@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import current_user
 
 from .. import poke_client
-from ..forms import PokemonReviewForm, SearchForm
+from ..forms import PokemonReviewForm, SearchForm, AddPokemonForm, RemovePokemonForm
 from ..models import User, Review
 from ..utils import current_time
 
@@ -37,29 +37,37 @@ def pokemon_detail(pokemon):
         flash(str(e))
         return redirect(url_for("users.login"))
 
-    if False:
-        form = PokemonReviewForm()
-        if form.validate_on_submit() and current_user.is_authenticated:
+    addForm = AddPokemonForm()
+    if addForm.validate_on_submit() and current_user.is_authenticated:
+        user = User.objects.get(username=current_user.username)
+        user.team = user.team.append(pokemon)
+        user.save()
+
+    form = PokemonReviewForm()
+    if form.validate_on_submit() and current_user.is_authenticated:
+        if len(form.text.data) >= 5:
             review = Review(
-                commenter=current_user._get_current_object(),
+                Trainer=current_user._get_current_object(),
                 content=form.text.data,
                 date=current_time(),
                 pokemon=pokemon,
             )
             review.save()
-
             return redirect(request.path)
 
-        reviews = Review.objects(pokemon=pokemon)
-
+    reviews = Review.objects(pokemon=pokemon)
     return render_template(
-        "pokemon_detail.html", pokemon=result)#, reviews=review
-
+        "pokemon_detail.html", pokemon=result, reviews=reviews, addForm = addForm, form=form)
 
 @pokemon.route("/user/<username>")
 def user_detail(username):
     user = User.objects(username=username).first()
-    reviews = Review.objects(commenter=user)
+    reviews = Review.objects(Trainer=user)
+    team_names = user.team
 
-    return render_template("user_detail.html", username=username, reviews=reviews)
+    team = []
+    for member in team_names:
+        team.append(poke_client.get_pokemon_info
+        (member))
 
+    return render_template("user_detail.html", username=username, reviews=reviews, team=team)

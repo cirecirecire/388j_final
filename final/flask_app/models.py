@@ -17,12 +17,18 @@ class User(db.Document, UserMixin):
     password = db.StringField(required=True)
     pfp = db.ImageField()
 
+    team = db.ListField(
+        base_field=db.StringField(),
+        size=6,  # Maximum of 100 ids in list
+    )
+
     # Returns unique string identifying our object
     def get_id(self):
         return self.username
 
 
 class Review(db.Document):
-    commenter = db.ReferenceField(User, required=True)
+    Trainer = db.ReferenceField(User, required=True)
     content = db.StringField(required=True, min_length=5, max_length=500)
     date = db.StringField(required=True)
+    pokemon = db.StringField(required=True)
