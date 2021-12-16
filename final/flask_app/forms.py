@@ -79,13 +79,12 @@ class UpdateUsernameForm(FlaskForm):
             if user is not None:
                 raise ValidationError("That username is already taken")
 
-
 class UpdateProfilePicForm(FlaskForm):
     pfp = FileField('Profile Picture', validators =[FileRequired(), FileAllowed(['jpg','png'], '.jpg or .png only')])
     submit = SubmitField('Update Profile Picture')
 
-
 class AddPokemonForm(FlaskForm):
+    pokemon = StringField("pokemon", validators=[InputRequired(), Length(min=1, max=40)])
     submit = SubmitField("Add Pokemon to Team")
 
 class RemovePokemonForm(FlaskForm):

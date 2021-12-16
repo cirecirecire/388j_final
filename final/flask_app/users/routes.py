@@ -3,8 +3,8 @@ from flask_login import current_user, login_required, login_user, logout_user
 from flask_mongoengine import MongoEngine
 
 from .. import bcrypt
-from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm, ValidationError
-from ..models import User
+from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm, ValidationError, AddPokemonForm
+from ..models import User, TeamMember
 
 import io
 import base64
@@ -98,3 +98,28 @@ def account():
 def logout():
     logout_user()
     return redirect(url_for("pokemon.index"))
+
+@users.route("/user/<username>")
+def user_detail(username):
+    user = User.objects(username=username).first()
+    team = user.team
+
+    return render_template("user_detail.html", username=username, team=team, image=get_b64_img(username))
+
+@users.route('/<username>/team', methods=['GET', 'POST'])
+def team(username):
+    form = AddPokemonForm()
+
+    if form.validate_on_submit():
+        team = TeamMember(
+            trainer = current_user,
+            pokemon = form.pokemon.data,
+        )
+        team.save()
+        #current_user.modify(username=update_user_form.username.data)
+        #    current_user.save()
+        return redirect(request.path)
+
+    members = TeamMember.objects(trainer=current_user)
+
+    return render_template("team_detail.html", trainer=username, form=form, team=members)

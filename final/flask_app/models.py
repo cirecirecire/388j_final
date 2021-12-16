@@ -32,3 +32,7 @@ class Review(db.Document):
     content = db.StringField(required=True, min_length=5, max_length=500)
     date = db.StringField(required=True)
     pokemon = db.StringField(required=True)
+
+class TeamMember(db.Document, UserMixin):
+    trainer = db.ReferenceField(User, required=True)
+    pokemon = db.StringField(required=True, min_length=1, max_length=100)

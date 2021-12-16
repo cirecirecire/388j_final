@@ -43,6 +43,8 @@ def pokemon_detail(pokemon):
         user.team = user.team.append(pokemon)
         user.save()
 
+        return redirect(url_for("users.account"))
+
     form = PokemonReviewForm()
     if form.validate_on_submit() and current_user.is_authenticated:
         if len(form.text.data) >= 5:
@@ -63,11 +65,7 @@ def pokemon_detail(pokemon):
 def user_detail(username):
     user = User.objects(username=username).first()
     reviews = Review.objects(Trainer=user)
-    team_names = user.team
 
-    team = []
-    for member in team_names:
-        team.append(poke_client.get_pokemon_info
-        (member))
+    team = user.team
 
     return render_template("user_detail.html", username=username, reviews=reviews, team=team)

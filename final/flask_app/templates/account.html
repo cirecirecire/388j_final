@@ -60,8 +60,8 @@
 <div class="row">
     <div class="col">
         {# Link to see all of the current user's reviews. #}
-        <a href="{{ url_for('pokemon.user_detail', username=current_user.username) }}">
-            <h4>Click here to meet your team and see your comments on other pokemon!</h4>
+        <a href="{{ url_for('users.user_detail', username=current_user.username) }}">
+            <h4>Click here to meet your team!</h4>
         </a>
     </div>
 </div>

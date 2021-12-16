@@ -1,0 +1,40 @@
+{% extends "header.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+            <h1> Your FABULOUS team! </h1>
+            <ul class="media-list">
+                {% for member in team %}
+                <li class="media review-item">
+                    <div class="media-body">
+                        <span class="float-right">
+                            <small>{{ member.pokemon }}</small>
+                        </span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h2> Add Pokemon: </h2>
+        <form action="" method="post">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.pokemon.label(class="form-control-label") }}
+                {{ form.pokemon(class="form-control form-control-lg") }}
+                {% if form.pokemon.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {% for error in form.pokemon.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
