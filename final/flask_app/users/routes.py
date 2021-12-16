@@ -9,7 +9,6 @@ from ..models import User, TeamMember
 import io
 import base64
 
-
 users = Blueprint('users', __name__)
 
 @users.route('/register', methods=['GET', 'POST'])
@@ -123,3 +122,7 @@ def team(username):
     members = TeamMember.objects(trainer=current_user)
 
     return render_template("team_detail.html", trainer=username, form=form, team=members)
+
+@users.route('/about')
+def about():
+    return render_template("about.html")

@@ -15,7 +15,6 @@
         {{ pokemon['name'] }}
       </div>
       <div class="card-body">
-        <img src="{{ pokemon.image_url }}" class="mr-3 movie" alt="alt text">
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><b>Height:</b> {{ pokemon['height'] }}</li>
           <li class="list-group-item"><b>Weight:</b> {{ pokemon['weight'] }}</li>
@@ -54,19 +53,6 @@
 </div>
 
 {% if current_user.is_authenticated %}
-{# add pokemon fields #}
-<div class="row">
-  <div class="col">
-    <form method="POST" action="">
-      {{ addForm.csrf_token }}
-      <div class="form-group">
-        <h1> This pokemon would be honored to be part of your team! Do you want to add them? </h1>
-        {{ addForm.addBox }}
-      </div>
-      {{ addForm.submit() }}
-    </form>
-  </div>
-</div>
 
 {# Movie review submission form #}
 <div class="row">

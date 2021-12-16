@@ -3,7 +3,7 @@ from flask_login import current_user
 
 from .. import poke_client
 from ..forms import PokemonReviewForm, SearchForm, AddPokemonForm, RemovePokemonForm
-from ..models import User, Review
+from ..models import User, Review, TeamMember
 from ..utils import current_time
 
 pokemon = Blueprint('pokemon', __name__)
@@ -39,11 +39,13 @@ def pokemon_detail(pokemon):
 
     addForm = AddPokemonForm()
     if addForm.validate_on_submit() and current_user.is_authenticated:
-        user = User.objects.get(username=current_user.username)
-        user.team = user.team.append(pokemon)
-        user.save()
+        team = TeamMember(
+            trainer = current_user,
+            pokemon = addForm.pokemon.data,
+        )
+        team.save()
 
-        return redirect(url_for("users.account"))
+        return redirect(url_for("users.team", username=current_user.username))
 
     form = PokemonReviewForm()
     if form.validate_on_submit() and current_user.is_authenticated:

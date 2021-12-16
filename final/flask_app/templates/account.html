@@ -60,7 +60,7 @@
 <div class="row">
     <div class="col">
         {# Link to see all of the current user's reviews. #}
-        <a href="{{ url_for('users.user_detail', username=current_user.username) }}">
+        <a href="{{ url_for('users.team', username=current_user.username) }}">
             <h4>Click here to meet your team!</h4>
         </a>
     </div>

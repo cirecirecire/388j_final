@@ -15,7 +15,11 @@
             {% endwith %}
 
             <div class="col">
-                <h2>Please use the search bar to search for pokemon by ability! Then you can review them </h2>
+                <h2> Please use the search bar to search for pokemon by name! Then you can review them </h2>
+
+                <a href="{{ url_for('users.about') }}">
+                    <h4>Click here to see the about page!</h4>
+                </a>
             </div>
 
             {{ form.csrf_token }}

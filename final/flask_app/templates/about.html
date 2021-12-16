@@ -1,0 +1,19 @@
+{% extends "header.html" %}
+{% block content %}
+
+<div class="col">
+    <h2> Welcome to Lily Mueller and Eric Fields' CMSC388J Final Project</h2>
+    <body> This project allows people to create an account on which they can 
+            search for pokemon and add them to their team. They can also comment
+            on individual pokemon and see other people's comments on the pokemon.
+            They can view many different aspects about a pokemon before adding to 
+            their team to get a good idea of what they would be getting from 
+            that pokemon. 
+
+            <a href="{{ url_for('users.login') }}">
+                <h4>Click here to login</h4>
+            </a>
+    </body>
+</div>
+
+{% endblock %}
