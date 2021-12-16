@@ -18,10 +18,18 @@ import os
 # local
 from .client import PokeClient
 
+MAIL_SERVER = 'smtp.googlemail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+MAIL_USERNAME = "pokemonleague107@gmail.com"
+MAIL_PASSWORD = "P0k3league"
+MAIL_DEFAULT_SENDER = 'pokemonleague107@gmail.com'
 
 db = MongoEngine()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+mail = Mail()
 poke_client = PokeClient()
 # might not need this 
 # poke_client = PokeClient(os.environ.get("OMDB_API_KEY"))
@@ -43,6 +51,8 @@ def create_app(test_config=None):
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
+    
+    mail.init_app(app)
 
     app.register_blueprint(users)
     app.register_blueprint(pokemon)
