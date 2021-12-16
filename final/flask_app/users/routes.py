@@ -1,8 +1,11 @@
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_mongoengine import MongoEngine
+import matplotlib
 
 from .. import bcrypt
+from ..email import send_email
+from ..token import generate_confirmation_token, confirm_token
 from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm, ValidationError, AddPokemonForm
 from ..models import User, TeamMember
 
@@ -23,9 +26,32 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashed)
         user.save()
 
+        # send conformation email
+        msg = "Congratuations on becoming a new trainer! If you did not sign up for this, we do not care. Good luck getting unsubscribed. Please contact 210-426-6079."
+        if not current_user is not None:
+        # mail.send(msg)
+            token = generate_confirmation_token(user.email)
+            confirm_url = url_for("users.confirm_email", token=token, _external=True)
+            confirm_template = render_template("confirm.html", confirm_url=confirm_url)
+            send_email(user.email, msg, confirm_template)
+
         return redirect(url_for("users.login"))
 
     return render_template("register.html", title="Register", form=form)
+
+@users.route("/confirm/<token>")
+@login_required
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+        user = User.objects(email=email).first()
+        if user.confirmed is False:
+            current_user.modify(confirmed=True)
+            current_user.save()
+    except:
+        flash("Confirmation link is invalid")
+    return redirect(url_for('users.account'))
+    # return render_template("account.html")
 
 @users.route("/login", methods=["GET", "POST"])
 def login():

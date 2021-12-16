@@ -6,6 +6,7 @@ from ..forms import PokemonReviewForm, SearchForm, AddPokemonForm, RemovePokemon
 from ..models import User, Review
 from ..utils import current_time
 
+
 pokemon = Blueprint('pokemon', __name__)
 
 @pokemon.route('/', methods=['GET', 'POST'])
