@@ -10,6 +10,7 @@ from flask_login import (
 )
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 
 # stdlib
 from datetime import datetime
