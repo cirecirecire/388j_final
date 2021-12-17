@@ -1,0 +1,69 @@
+{% extends "header.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        {# Profile picture #}
+        <img class="pfp" src="data:image/png;base64,{{image}}" alt="image">
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <h1>Hi, {{ current_user.username }}! Ready to train?</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <form action="" method="post">
+            {{ username_form.csrf_token }}
+            <div class="form-group">
+                {{ username_form.username.label(class="form-control-label") }}
+                {{ username_form.username(class="form-control form-control-lg") }}
+
+                {% if username_form.username.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {% for error in username_form.username.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ username_form.submit }}
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        
+        {# Profile Picture Update Form #}
+        <form method="POST" action="" enctype="multipart/form-data">
+        {{ pfp_update_form.csrf_token }}
+        <div class="form-group">
+            {{ pfp_update_form.pfp.label }}
+            {{ pfp_update_form.pfp(class="form-control") }}
+    
+            {% if pfp_update_form.errors %}
+            <div class="alert alert-warning" role="alert">
+            {% for error in pfp_update_form.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+            </div>
+            {% endif %}
+    
+        </div>
+        {{ pfp_update_form.submit() }}
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        {# Link to see all of the current user's reviews. #}
+        <a href="{{ url_for('users.team', username=current_user.username) }}">
+            <h4>Click here to meet your team!</h4>
+        </a>
+    </div>
+</div>
+
+{% endblock %}>

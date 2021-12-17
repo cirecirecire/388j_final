@@ -1,0 +1,30 @@
+{% extends "header.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <img class="propic" src="data:image/png;base64,{{image}}" alt="image">
+    </div>
+    <div class="col">
+        <h2>{{ username }}'s Homepage</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+            <h1> Your FABULOUS team! </h1>
+            <ul class="media-list">
+                {% for pokemon in team %}
+                <li class="media review-item">
+                    <div class="media-body">
+                        <span class="float-right">
+                            <small>{{ pokemon['name'] }}</small>
+                        </span>
+                        <strong>For: <a href="{{ url_for('pokemon.pokemon_detail', pokemon=pokemon['name']) }}">
+                            </a>
+                        </strong>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+{% endblock %}
