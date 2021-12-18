@@ -46,6 +46,10 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     app.config.from_pyfile("config.py", silent=False)
+
+    app.config["MONGODB_HOST"] = os.getenv("MONGODB_HOST")
+    
+    
     if test_config is not None:
         app.config.update(test_config)
 
@@ -62,5 +66,3 @@ def create_app(test_config=None):
     login_manager.login_view = "users.login"
 
     return app
-
-app = create_app()
