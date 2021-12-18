@@ -136,7 +136,7 @@ def team(username):
 
     if form.validate_on_submit():
         team = TeamMember(
-            trainer = current_user,
+            trainer = current_user.username,
             pokemon = form.pokemon.data,
         )
         team.save()
@@ -144,7 +144,7 @@ def team(username):
         #    current_user.save()
         return redirect(request.path)
 
-    members = TeamMember.objects(trainer=current_user)
+    members = TeamMember.objects(trainer=current_user.username)
 
     return render_template("team_detail.html", trainer=username, form=form, team=members)
 

@@ -34,5 +34,5 @@ class Review(db.Document):
     pokemon = db.StringField(required=True)
 
 class TeamMember(db.Document, UserMixin):
-    trainer = db.ReferenceField(User, required=True)
+    trainer = db.StringField(required=True)
     pokemon = db.StringField(required=True, min_length=1, max_length=100)
